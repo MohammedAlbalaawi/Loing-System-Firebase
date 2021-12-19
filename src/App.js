@@ -1,23 +1,28 @@
-import logo from './logo.svg';
+
 import './App.css';
+import Login from './components/Login'
+import { onAuthStateChanged } from 'firebase/auth'
+import Chat from './components/Chat';
+import { useState } from 'react';
+import { auth } from './firebase/firebase-config'
+
 
 function App() {
+
+  const [user, setUser] = useState({})
+
+  // firebase check if you was loggin and set the user, or this's new visit (sign up) 
+  onAuthStateChanged(auth, (currentUser) => {
+    setUser(currentUser)
+  })
+
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.js</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
+      {user ? (
+        <Chat user={user}/>
+      ) : (
+        <Login />
+      )}
     </div>
   );
 }
